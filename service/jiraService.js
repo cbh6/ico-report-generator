@@ -33,7 +33,7 @@ var getJiraInfo = function (url) {
 	});
 };
 
-var getJirasInfo = function (user,pass,codes) {
+var getJirasInfo = function (user,pass,host,codes) {
 	console.log("ENTRADA EN getJirasInfo(", user,pass,host,codes, ")");
 	return new Promise(function (resolve, reject) {
 		try {
