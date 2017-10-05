@@ -1,6 +1,6 @@
 "use strict";
 
-//LOCAL DEPENDENCIES
+// Local dependencies
 var browser = require("../utils/browser");
 var prUtils = require("../utils/promiseUtils");
 var errorCodes = require("../utils/errorCodes");

@@ -1,5 +1,61 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  
+	div(id='app')
+		h1 Report Generator - {{message}}
+		div(id='insert')
+			input(type='text', v-model='newMember')
+			input(type='button', value='Añadir', v-on:click='addMember')
+
+		div
+			ul
+				li(v-for='(i, memberIndex) in info') {{ i.member }}
+					input(type='button', value='Eliminar', v-on:click='removeMember(memberIndex)')
+					ul
+						div
+							input(type='text', v-model='newCard.code')
+							input(type='text', v-model='newCard.comment')
+							input(type='button', value='Añadir', v-on:click='addCard(memberIndex)')
+						li(v-for='(c, cardIndex) in i.cards') {{ c }} 
+							input(type='button', value='Eliminar', v-on:click='removeCard(memberIndex, cardIndex)')
+
+	script.
+		var app = new Vue({
+			el:'#app',
+			data: {
+				message: 'App',
+				newMember: '',
+				newCard: {},
+				info: [{
+					member: 'cbh',
+					cards: [{
+						code: 'ICO-48864',
+						comment: 'Documentando'
+					}]
+				}]
+			},
+			methods: {
+				addMember: function(){
+					if(this.newMember != ''){
+						var newInfo = {};
+						newInfo.member = this.newMember;
+						newInfo.cards = [];
+						this.info.push(newInfo);
+						this.newMember = '';
+					}
+				},
+				addCard: function(memberIndex){
+					if(this.newCard.code != undefined){
+						this.info[memberIndex].cards.push(this.newCard);
+						this.newCard = {};
+					}
+				},
+				removeCard : function(memberIndex, cardIndex){
+					this.info[memberIndex].cards.splice(cardIndex, 1);
+				},
+				removeMember : function(memberIndex){
+					this.info.splice(memberIndex, 1);
+				}
+			}
+		})
