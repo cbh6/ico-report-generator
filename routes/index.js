@@ -18,22 +18,22 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/getJirasInfo/:user/:pass/:host/:codes', function (req, res) {
+router.post('/getJirasInfo', function (req, res) {
 	try {
-		var user = req.params.user;
-		var pass = req.params.pass;
-		var host = req.params.host;
-		var codes = req.params.codes;
+		var user = req.body.user;
+		var pass = req.body.pass;
+		var host = req.body.host;
+		var info = req.body.info;
 
-		jiraService.getJirasInfo(user,pass,host,codes)
-		
+		jiraService.getJirasInfo(user,pass,host,info)
 		.then(function (response){
 			docService.generateReport(response);
-			res.download(path.resolve(__dirname, '../reports/output.docx'), 'prueba.docx');
+			res.download(path.resolve(__dirname, '../reports/output.docx'), 'acta.docx');
 		})
 		.catch(function (error) {
 			errorUtils.handleError(error, res);
 		});
+		res.send('Hecho');
 	} catch (error) {
 		errorUtils.handleError(error, res);
 	}

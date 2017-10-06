@@ -4,7 +4,13 @@ block content
   
 	div(id='app')
 		h1 Report Generator - {{message}}
-		div(id='insert')
+
+		div
+			input(type='text', v-model='ext', placeholder='Usuario')
+			input(type='text', v-model='pass', placeholder='Contraseña')
+			input(type='text', v-model='host', placeholder='Host')
+		
+		div
 			input(type='text', v-model='newMember')
 			input(type='button', value='Añadir', v-on:click='addMember')
 
@@ -19,11 +25,15 @@ block content
 							input(type='button', value='Añadir', v-on:click='addCard(memberIndex)')
 						li(v-for='(c, cardIndex) in i.cards') {{ c }} 
 							input(type='button', value='Eliminar', v-on:click='removeCard(memberIndex, cardIndex)')
+		input(type='button', value='Generar Acta', v-on:click='generarActa()')
 
 	script.
 		var app = new Vue({
 			el:'#app',
 			data: {
+				ext: 'ext2165',
+				pass: 'ext2165',
+				host: '',
 				message: 'App',
 				newMember: '',
 				newCard: {},
@@ -56,6 +66,17 @@ block content
 				},
 				removeMember : function(memberIndex){
 					this.info.splice(memberIndex, 1);
+				},
+				generarActa : function(){
+					console.log('generarActa()');
+					console.log(this.info);
+					axios.post('http://localhost:3000/getJirasInfo',{
+						'user' : this.ext,
+						'pass' : this.pass,
+						'host' : this.host,
+						'info' : this.info
+					})
+					.then(response => console.log(response));
 				}
 			}
 		})
