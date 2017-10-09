@@ -2,6 +2,18 @@ var JSZip = require('jszip');
 var Docxtemplater = require('docxtemplater');
 var fs = require('fs');
 var path = require('path');
+var moment = require('moment');
+
+moment.locale('es');
+var now = moment();
+var fechaActaLarga = now.clone().format('D MMMM YYYY');
+var fechaInicio = now.clone().subtract(7,'days').format('D-M-YYYY');
+var fechaActa = now.clone().format('D-M-YYYY');
+console.log(fechaActaLarga, fechaActa, fechaInicio);
+
+var getReportName = function () {
+	return 'Acta de Reunión de seguimiento semanal de proyecto '+ fechaActaLarga +'.docx';
+}
 
 var generateReport = function (data) {
     //Load the docx file as a binary
@@ -14,7 +26,10 @@ var generateReport = function (data) {
 
     //set the templateVariables
     doc.setData({
-        "peticiones": data
+        "jiraData": data,
+        "fechaActaLarga" : fechaActaLarga,
+        "fechaActa" : fechaActa,
+        "fechaInicio" : fechaInicio
     });
 
     try {
@@ -39,9 +54,8 @@ var generateReport = function (data) {
     });
 
     // buf is a nodejs buffer, you can either write it to a file or 
-    fs.writeFileSync(path.resolve(__dirname, '../reports', 'output.docx'), buf);
-
-    return buf;
+    fs.writeFileSync(path.resolve(__dirname, '../reports', getReportName()), buf);
+    return getReportName();
 };
 
 module.exports.generateReport = generateReport;

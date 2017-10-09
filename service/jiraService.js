@@ -22,7 +22,7 @@ var getJiraInfo = function (url, comment, owner) {
 				jiraInfo.descripcion = $('#description-val').text().trim();
 				jiraInfo.fechaCreada = $('[data-name="F. Creada"]').text().trim();
 				jiraInfo.fechaEntrega = $('[data-name="F. Prevista de Entrega"]').text().trim();
-				jiraInfo.comment = comment;
+				jiraInfo.comentario = comment;
 				jiraInfo.owner = owner;
 				resolve(jiraInfo);
 			}).catch(function (err) {
@@ -52,27 +52,35 @@ var getJirasInfo = function (user,pass,host,info) {
 			// }).catch(function (err) {
 			// 	prUtils.handleRejection(err, reject)
 			// });
-			for(var member in info){
+			var reportData = [];
+			for(var key in info){
 				// var memberData = {};
 				// memberData.member = info[member].member;
-				for(var card in info[member].cards){
-					var cardUrl = url.concat(info[member].cards[card].code);
-					var cardComment = info[member].cards[card].comment;
-					var cardOwner = info[member].member;
+
+				// init reportData member
+				var newMember = {};
+				newMember.name = info[key].member;
+				newMember.cards = [];
+				reportData.push(newMember);
+
+				for(var card in info[key].cards){
+					var cardUrl = url.concat(info[key].cards[card].code);
+					var cardComment = info[key].cards[card].comment;
+					var cardOwner = info[key].member;
 					promiseArray.push(getJiraInfo(cardUrl, cardComment, cardOwner));
 				}
 			}
 
-			var reportData = {};
+			
 			Promise.all(promiseArray).then(function (jiras) {
 				for(var key in jiras){
-					if(reportData[jiras[key].owner].cards == undefined){
-						reportData[jiras[key].owner].cards = [];
-					} 
-					reportData[jiras[key].owner].cards.push(jiras[key]);
+					//reportData[jiras[key].owner].cards.push(jiras[key]);
+
+					reportData.filter(function(e){
+						return e.name == jiras[key].owner;
+					})[0].cards.push(jiras[key]);
 				}
-				console.log(reportData);
-				//resolve(reportData);
+				resolve(reportData);
 			}).catch(function (err) {
 				prUtils.handleRejection(err, reject);
 			});

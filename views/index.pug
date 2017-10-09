@@ -3,7 +3,7 @@ extends layout
 block content
   
 	div(id='app')
-		h1 Report Generator - {{message}}
+		h1 {{title}}
 
 		div
 			input(type='text', v-model='ext', placeholder='Usuario')
@@ -11,7 +11,7 @@ block content
 			input(type='text', v-model='host', placeholder='Host')
 		
 		div
-			input(type='text', v-model='newMember')
+			input(type='text', v-model='newMember', placeholder='Nueva persona')
 			input(type='button', value='Añadir', v-on:click='addMember')
 
 		div
@@ -33,17 +33,11 @@ block content
 			data: {
 				ext: 'ext2165',
 				pass: 'ext2165',
-				host: '',
-				message: 'App',
+				host: 'jira.ico.red',
+				title: 'Generador de Actas - ICO',
 				newMember: '',
 				newCard: {},
-				info: [{
-					member: 'cbh',
-					cards: [{
-						code: 'ICO-48864',
-						comment: 'Documentando'
-					}]
-				}]
+				info: []
 			},
 			methods: {
 				addMember: function(){
@@ -68,15 +62,13 @@ block content
 					this.info.splice(memberIndex, 1);
 				},
 				generarActa : function(){
-					console.log('generarActa()');
-					console.log(this.info);
 					axios.post('http://localhost:3000/getJirasInfo',{
 						'user' : this.ext,
 						'pass' : this.pass,
 						'host' : this.host,
 						'info' : this.info
 					})
-					.then(response => console.log(response));
+					.then(response => window.open('/download/'+response.data));
 				}
 			}
 		})

@@ -27,16 +27,20 @@ router.post('/getJirasInfo', function (req, res) {
 
 		jiraService.getJirasInfo(user,pass,host,info)
 		.then(function (response){
-			docService.generateReport(response);
-			res.download(path.resolve(__dirname, '../reports/output.docx'), 'acta.docx');
+			res.send(docService.generateReport(response));
+			
 		})
 		.catch(function (error) {
 			errorUtils.handleError(error, res);
 		});
-		res.send('Hecho');
+		//res.send('output.docx');
 	} catch (error) {
 		errorUtils.handleError(error, res);
 	}
+});
+
+router.get('/download/:file', function(req, res){
+	res.download(path.resolve(__dirname, '../reports/' + req.params.file));
 });
 
 module.exports = router;
