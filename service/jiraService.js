@@ -35,27 +35,14 @@ var getJiraInfo = function (url, comment, owner) {
 };
 
 var getJirasInfo = function (user,pass,host,info) {
-	// console.log("ENTRADA EN getJirasInfo(", user,pass,host,codes, ")");
 	return new Promise(function (resolve, reject) {
 		try {
 			//Promise array
 			var promiseArray = [];
 			var url = "https://"+ user +":"+ pass +"@"+ host +"/jira/browse/";
 
-			// codes = codes.split(",");
-			// for (var i in codes) {
-			//   promiseArray.push(getJiraInfo(url.concat(codes[i])))
-			// }
-
-			// Promise.all(promiseArray).then(function (jiras) {
-			// 	resolve(jiras);
-			// }).catch(function (err) {
-			// 	prUtils.handleRejection(err, reject)
-			// });
 			var reportData = [];
 			for(var key in info){
-				// var memberData = {};
-				// memberData.member = info[member].member;
 
 				// init reportData member
 				var newMember = {};
@@ -74,8 +61,6 @@ var getJirasInfo = function (user,pass,host,info) {
 			
 			Promise.all(promiseArray).then(function (jiras) {
 				for(var key in jiras){
-					//reportData[jiras[key].owner].cards.push(jiras[key]);
-
 					reportData.filter(function(e){
 						return e.name == jiras[key].owner;
 					})[0].cards.push(jiras[key]);

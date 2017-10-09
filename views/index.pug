@@ -2,39 +2,66 @@ extends layout
 
 block content
   
-	div(id='app')
-		h1 {{title}}
-
-		div
-			input(type='text', v-model='ext', placeholder='Usuario')
-			input(type='text', v-model='pass', placeholder='Contraseña')
-			input(type='text', v-model='host', placeholder='Host')
+	div(id='app', class='ui container')
 		
-		div
-			input(type='text', v-model='newMember', placeholder='Nueva persona')
-			input(type='button', value='Añadir', v-on:click='addMember')
+		div(class='ui form')
+			h1 {{title}}
+			div(class='fields') 
+				div(class='field ui input')
+					input(type='text', v-model='ext', placeholder='Usuario')
+				div(class='field ui input')
+					input(type='text', v-model='pass', placeholder='Contraseña')
+				div(class='field ui input')
+					input(type='text', v-model='host', placeholder='Host')
+			
+			div(class='fields')
+				div(class='field ui input')
+					input(type='text', v-model='newMember', v-on:keyup.enter='addMember', placeholder='Nueva persona')
+				div(class='field ui input')
+					button(class='ui compact icon button', v-on:click='addMember')
+						i(class='plus icon')
 
-		div
-			ul
-				li(v-for='(i, memberIndex) in info') {{ i.member }}
-					input(type='button', value='Eliminar', v-on:click='removeMember(memberIndex)')
-					ul
-						div
-							input(type='text', v-model='newCard.code')
-							input(type='text', v-model='newCard.comment')
-							input(type='button', value='Añadir', v-on:click='addCard(memberIndex)')
-						li(v-for='(c, cardIndex) in i.cards') {{ c }} 
-							input(type='button', value='Eliminar', v-on:click='removeCard(memberIndex, cardIndex)')
-		input(type='button', value='Generar Acta', v-on:click='generarActa()')
+			div(class='ui relaxed list')
+				transition-group(name='slide-fade', tag='div')
+					div(class='item ui black segment', v-for='(i, memberIndex) in info', v-bind:key='i')
+						//- i(class='help icon')
+						div(class='content ico-cards') 
+							div(class='header') 
+								span {{ i.member }}
+								button(class='ui compact icon black button right floated', v-on:click='removeMember(memberIndex)')
+									i(class='remove icon')
+							div(class='ui relaxed list')
+								div(class='item')
+									div(class='content')
+										div(class='header fields')
+											div(class='field ui input')
+												input(type='text', placeholder='Código Jira', v-on:keyup.enter='addCard(memberIndex)', v-model='newCard.code')
+											div(class='field ui input')
+												input(type='text', class='comentario', placeholder='Comentario...', v-on:keyup.enter='addCard(memberIndex)', v-model='newCard.comment')
+											div(class='field ui input')
+												button(class='ui compact icon green basic button', v-on:click='addCard(memberIndex)')
+													i(class='plus icon')
+								div(class='item', v-for='(c, cardIndex) in i.cards', v-bind:key='c') 
+									div(class='content')
+										div(class='header fields')
+											div(class='field ui disabled input')
+												input(type='text', v-model='c.code')
+											div(class='field ui disabled input')
+												input(type='text', class='comentario', v-model='c.comment')
+											div(class='field ui input')
+												button(class='ui compact icon red basic button', v-on:click='removeCard(memberIndex, cardIndex)')
+													i(class='remove icon' v-on:click='removeCard(memberIndex, cardIndex)')
+			div(class='left floated')
+				button(class='ui button', v-on:click='generarActa()') Generar Acta
 
 	script.
 		var app = new Vue({
 			el:'#app',
 			data: {
-				ext: 'ext2165',
-				pass: 'ext2165',
-				host: 'jira.ico.red',
-				title: 'Generador de Actas - ICO',
+				ext: '',
+				pass: '',
+				host: '',
+				title: 'Generador de Actas',
 				newMember: '',
 				newCard: {},
 				info: []
@@ -53,6 +80,7 @@ block content
 					if(this.newCard.code != undefined){
 						this.info[memberIndex].cards.push(this.newCard);
 						this.newCard = {};
+						console.log(this.$refs);
 					}
 				},
 				removeCard : function(memberIndex, cardIndex){

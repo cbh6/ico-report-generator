@@ -6,3 +6,28 @@ body {
 a {
   color: #00B7FF;
 }
+
+
+.header span{
+	padding-left: 10px;
+}
+
+.ico-cards {
+	padding: 10px;
+}
+
+/* Enter and leave animations can use different */
+/* durations and timing functions.              */
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+
+.slide-fade-enter
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
+.comentario{
+	min-width: 600px;
+}

@@ -9,7 +9,6 @@ var now = moment();
 var fechaActaLarga = now.clone().format('D MMMM YYYY');
 var fechaInicio = now.clone().subtract(7,'days').format('D-M-YYYY');
 var fechaActa = now.clone().format('D-M-YYYY');
-console.log(fechaActaLarga, fechaActa, fechaInicio);
 
 var getReportName = function () {
 	return 'Acta de Reunión de seguimiento semanal de proyecto '+ fechaActaLarga +'.docx';
