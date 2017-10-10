@@ -90,7 +90,7 @@ block content
 					this.info.splice(memberIndex, 1);
 				},
 				generarActa : function(){
-					axios.post('http://localhost:3000/getJirasInfo',{
+					axios.post(window.location.href + 'getJirasInfo',{
 						'user' : this.ext,
 						'pass' : this.pass,
 						'host' : this.host,
